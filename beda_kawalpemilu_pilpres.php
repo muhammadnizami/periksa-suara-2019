@@ -29,7 +29,7 @@
         <h2>CATATAN</h2>
         <p> Ini dibuat sebagai alat bantu saja untuk memeriksa kembali data. Hasil yang muncul di situs ini bukanlah sebuah pernyataan ataupun publikasi resmi dari organisasi ataupun pihak apapun.
         </p>
-        <p> Data tidak selalu data terbaru dan tidak selalu lengkap. </p>
+        <p> Data tidak selalu data terbaru dan tidak lengkap. Data hanya diupdate kadang-kadang dan hanya sebagian saja. </p>
         <p> Data yang muncul di bawah ini bisa saja salah. Harap crosscheck dengan sumber aslinya </p>
         <h2>Rangkuman</h2>
 <!-- APAKAH PERLU TAMPILAN TABEL RANGKUMAN? pertimbangannya adalah tidak ada artinya rangkuman dari data yang belum diperiksa dan diinterpretasi. Boleh dibilang, sebelum diperiksa dan diinterpretasi, ini data sampah, jadi rangkumannya juga sampah.-->

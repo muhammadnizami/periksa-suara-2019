@@ -12,6 +12,7 @@ function file_get_contents_no_verify_continue_try($url){
 	$waktu_coba_lagi = $GLOBALS['waktu_coba_lagi'];
 	$percobaan=0;
 	do{
+
 		$arrContextOptions=array(
 		    "ssl"=>array(
 		        "verify_peer"=>false,
@@ -137,7 +138,7 @@ function updateDaftarTPSKPU(){
 	$dbconn->close();
 }
 
-function updateSuaraKawalPemilu(){
+function updateSuaraKawalPemilu($callback=0){
 	// Create connection
 	$dbconn = new mysqli(DBSERVERNAME, DBUSERNAME, DBPASSWORD);
 	$server_kawalpemilu = $GLOBALS['server_kawalpemilu'];
@@ -188,11 +189,15 @@ function updateSuaraKawalPemilu(){
 													$photo=$photo_url;
 												}
 											}
-											$sql = sprintf("INSERT INTO suara_kawalpemilu_pilpres (id_provinsi,id_kotakab,id_kecamatan,id_kelurahan,nama_tps,tanggal_update_suara_kawalpemilu_pilpres, pas1, pas2, tSah, sah, photo) VALUES (%s,%s,%s,%s,'%s','%s', %s, %s, %s, %s,'%s') ON DUPLICATE KEY UPDATE tanggal_update_suara_kawalpemilu_pilpres='%s', pas1=%s, pas2=%s, tSah=%s, sah=%s, photo='%s'", $id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,'TPS '.$no_tps,$date, $pas1, $pas2, $tSah, $sah,$photo,$date, $pas1, $pas2, $tSah, $sah,$photo); //TODO ADD PHOTO
+											$nama_tps = 'TPS '.$no_tps;
+											$sql = sprintf("INSERT INTO suara_kawalpemilu_pilpres (id_provinsi,id_kotakab,id_kecamatan,id_kelurahan,nama_tps,tanggal_update_suara_kawalpemilu_pilpres, pas1, pas2, tSah, sah, photo) VALUES (%s,%s,%s,%s,'%s','%s', %s, %s, %s, %s,'%s') ON DUPLICATE KEY UPDATE tanggal_update_suara_kawalpemilu_pilpres='%s', pas1=%s, pas2=%s, tSah=%s, sah=%s, photo='%s'", $id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$nama_tps,$date, $pas1, $pas2, $tSah, $sah,$photo,$date, $pas1, $pas2, $tSah, $sah,$photo); //TODO ADD PHOTO
 											if ($dbconn->query($sql) === TRUE) {
-											    printf("New record %s created successfully\n", $no_tps);
+											    printf("New record %s created successfully\n", $nama_tps);
 											} else {
 											    printf("Error: " . $sql . "\n" . $dbconn->error);
+											}
+											if ($callback){
+												$callback($id_provinsi, $id_kotakab, $id_kecamatan, $id_kelurahan, $nama_tps, $dbconn);
 											}
 										}
 									}
@@ -224,6 +229,12 @@ function updateSuaraKPUBerdasarkanKawalPemiluTerbaru(){
 
 	$sql = "SELECT * FROM suara_kawalpemilu_pilpres LEFT JOIN tps USING (id_provinsi,id_kotakab,id_kecamatan,id_kelurahan,nama_tps) LEFT JOIN suara_situngkpu_pilpres USING (id_provinsi,id_kotakab, id_kecamatan, id_kelurahan, id_tps) WHERE tanggal_update_suara_situngkpu_pilpres IS NULL OR tanggal_update_suara_situngkpu_pilpres<tanggal_update_suara_kawalpemilu_pilpres";
 	$antrian_update_tps=$dbconn->query($sql);
+	update_tps($antrian_update_tps, $dbconn);
+	$dbconn->close();
+}
+function update_tps($antrian_update_tps, $dbconn){
+	$server_kawalpemilu = $GLOBALS['server_kawalpemilu'];
+	$server_kpu = $GLOBALS['server_kpu'];
 	if ($antrian_update_tps->num_rows > 0) {
     	// update data of each row
     	$id_provinsi_terupdate=array();
@@ -418,6 +429,13 @@ function updateSuaraKPUBerdasarkanKawalPemiluTerbaru(){
 	} else {
 	    printf("0 results");
 	}
-	$dbconn->close();
+}
+function after_kawalpemilu_situng_kpu_callback($id_provinsi, $id_kotakab, $id_kecamatan, $id_kelurahan, $nama_tps, $dbconn){
+	$sql = sprintf("SELECT * FROM suara_kawalpemilu_pilpres LEFT JOIN tps USING (id_provinsi,id_kotakab,id_kecamatan,id_kelurahan,nama_tps) LEFT JOIN suara_situngkpu_pilpres USING (id_provinsi,id_kotakab, id_kecamatan, id_kelurahan, id_tps) WHERE id_provinsi=%d AND id_kotakab=%d AND id_kecamatan=%d AND id_kelurahan=%d AND nama_tps='%s'",$id_provinsi, $id_kotakab, $id_kecamatan, $id_kelurahan, $nama_tps);
+	$antrian_update_tps = $dbconn->query($sql);
+	update_tps($antrian_update_tps,$dbconn);
+}
+function update_both(){
+	updateSuaraKawalPemilu('after_kawalpemilu_situng_kpu_callback');
 }
 ?>
