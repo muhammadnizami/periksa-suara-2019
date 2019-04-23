@@ -17,6 +17,7 @@ function file_get_contents_no_verify_continue_try($url){
 		    "ssl"=>array(
 		        "verify_peer"=>false,
 		        "verify_peer_name"=>false,
+		    	"proxy"=>"https://36.89.184.27:8080/",
 		    ),
 		);  
 		$result= file_get_contents($url, false, stream_context_create($arrContextOptions));
