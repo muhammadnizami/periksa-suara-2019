@@ -113,7 +113,7 @@
 	    		<th><?php echo $result['jumlah_tps'] ?></th>
     		</tr>
 	    </table>
-    		<p> Jumlah TPS diperiksa: <?php
+    		<p> Jumlah TPS yang telah dicocokkan: <?php
     			$sql = "SELECT COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, nama_tps);";
     			$result = $dbconn->query($sql)->fetch_assoc();
     			echo $result['jumlah_tps'];
