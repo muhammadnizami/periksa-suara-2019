@@ -31,7 +31,8 @@
         </p>
         <p> Data tidak selalu data terbaru dan tidak lengkap. Data hanya diupdate kadang-kadang dan hanya sebagian saja. </p>
         <p> Data yang muncul di bawah ini bisa saja salah. Harap crosscheck dengan sumber aslinya </p>
-        <h2>Rangkuman</h2>
+        <p> ***Untuk memahami rangkuman, harap perhatikan macam-macam penyebab kenapa data berbeda. Arti dari rangkuman ini harus dilihat dari sumber kesalahannya. Sumber kesalahan bisa dari mana saja, termasuk dari pengumpulan data di situs ini. Silakan lihat data yang lebih detil di bagian bawah </p>
+        <h2>Rangkuman***</h2>
 <!-- APAKAH PERLU TAMPILAN TABEL RANGKUMAN? pertimbangannya adalah tidak ada artinya rangkuman dari data yang belum diperiksa dan diinterpretasi. Boleh dibilang, sebelum diperiksa dan diinterpretasi, ini data sampah, jadi rangkumannya juga sampah.-->
          <table border=1>
 	        <tr>
@@ -122,6 +123,7 @@
     			$result = $dbconn->query($sql)->fetch_assoc();
     			echo $result['jumlah_tps'];
 			?></p>
+        <p> ***Untuk memahami rangkuman, harap perhatikan macam-macam penyebab kenapa data berbeda. Arti dari rangkuman ini harus dilihat dari sumber kesalahannya. Sumber kesalahan bisa dari mana saja, termasuk dari pengumpulan data di situs ini. Silakan lihat data yang lebih detil di bagian bawah </p>
 
 		<h2>Lihat data yang berbeda</h2>
 		<form>
