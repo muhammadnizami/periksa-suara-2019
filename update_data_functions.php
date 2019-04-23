@@ -189,7 +189,7 @@ function updateSuaraKawalPemilu($callback=0){
 													$photo=$photo_url;
 												}
 											}
-											$nama_tps = 'TPS '.$no_tps;
+											$nama_tps = sprintf('TPS %0'.strval(floor(log10(sizeof($daftar_tps["data"]))+1)).'d',$no_tps);
 											$sql = sprintf("INSERT INTO suara_kawalpemilu_pilpres (id_provinsi,id_kotakab,id_kecamatan,id_kelurahan,nama_tps,tanggal_update_suara_kawalpemilu_pilpres, pas1, pas2, tSah, sah, photo) VALUES (%s,%s,%s,%s,'%s','%s', %s, %s, %s, %s,'%s') ON DUPLICATE KEY UPDATE tanggal_update_suara_kawalpemilu_pilpres='%s', pas1=%s, pas2=%s, tSah=%s, sah=%s, photo='%s'", $id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$nama_tps,$date, $pas1, $pas2, $tSah, $sah,$photo,$date, $pas1, $pas2, $tSah, $sah,$photo); //TODO ADD PHOTO
 											if ($dbconn->query($sql) === TRUE) {
 											    printf("New record %s created successfully\n", $nama_tps);
@@ -227,7 +227,7 @@ function updateSuaraKPUBerdasarkanKawalPemiluTerbaru(){
 	    printf("Error: " . $sql . "\n" . $dbconn->error);
 	}
 
-	$sql = "SELECT * FROM suara_kawalpemilu_pilpres LEFT JOIN tps USING (id_provinsi,id_kotakab,id_kecamatan,id_kelurahan,nama_tps) LEFT JOIN suara_situngkpu_pilpres USING (id_provinsi,id_kotakab, id_kecamatan, id_kelurahan, id_tps) WHERE tanggal_update_suara_situngkpu_pilpres IS NULL OR tanggal_update_suara_situngkpu_pilpres<tanggal_update_suara_kawalpemilu_pilpres";
+	$sql = "SELECT * FROM suara_kawalpemilu_pilpres LEFT JOIN tps USING (id_provinsi,id_kotakab,id_kecamatan,id_kelurahan,no_tps) LEFT JOIN suara_situngkpu_pilpres USING (id_provinsi,id_kotakab, id_kecamatan, id_kelurahan, id_tps) WHERE tanggal_update_suara_situngkpu_pilpres IS NULL OR tanggal_update_suara_situngkpu_pilpres<tanggal_update_suara_kawalpemilu_pilpres";
 	$antrian_update_tps=$dbconn->query($sql);
 	update_tps($antrian_update_tps, $dbconn);
 	$dbconn->close();
@@ -249,6 +249,7 @@ function update_tps($antrian_update_tps, $dbconn){
 	    	$id_kelurahan=$row['id_kelurahan'];
 	    	$id_tps=$row['id_tps'];
 	    	$nama_tps=$row['nama_tps'];
+	    	$no_tps=$row['no_tps'];
 
 	    	//updating details
 	        if (! array_key_exists($id_provinsi,$id_provinsi_terupdate)){
@@ -371,27 +372,28 @@ function update_tps($antrian_update_tps, $dbconn){
         			$id_kelurahan_terupdate[myHash([$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan])]=true;
 	        	}
 	        }
-	        if (! array_key_exists(myHash([$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$nama_tps]),$id_tps_terupdate)){
-	        	$sql = sprintf("SELECT * FROM tps WHERE id_provinsi=%d AND id_kotakab=%d AND id_kecamatan=%d AND id_kelurahan = %d AND nama_tps = '%s'",$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$nama_tps);
+	        if (! array_key_exists(myHash([$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$no_tps]),$id_tps_terupdate)){
+	        	$sql = sprintf("SELECT * FROM tps WHERE id_provinsi=%d AND id_kotakab=%d AND id_kecamatan=%d AND id_kelurahan = %d AND no_tps = %d",$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$no_tps);
 	        	$tps = $dbconn->query($sql);
 	        	if ($tps->num_rows == 0){
 					$url_kelurahan= sprintf("https://%s/static/json/wilayah/%d/%d/%d/%d.json", $server_kpu,$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan);
 					$json_kelurahan = file_get_contents_no_verify_continue_try($url_kelurahan);
 					$daftar_tps = json_decode($json_kelurahan,true);
 					$daftar_tps_baru_sql = array();
-					$daftar_nama_tps_baru = array();
+					$daftar_no_tps_baru = array();
 					foreach($daftar_tps as $id_tps_baru => $detail_tps) {
 						$nama_tps_baru = $detail_tps["nama"];
-						if (! array_key_exists(myHash([$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$nama_tps_baru]),$id_tps_terupdate)){
+						$no_tps_baru = (int)substr($nama_tps_baru,4);
+						if (! array_key_exists(myHash([$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$no_tps_baru]),$id_tps_terupdate)){
 							array_push($daftar_tps_baru_sql,sprintf("(%d,%d,%d,%d,%d,'%s')",$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$id_tps_baru, str_replace("'","\\'",$nama_tps_baru)));
-							array_push($daftar_nama_tps_baru,myHash([$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$nama_tps_baru]));
-							$map_id_tps_baru[myHash([$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$nama_tps_baru])]=$id_tps_baru;
+							array_push($daftar_no_tps_baru,myHash([$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$no_tps_baru]));
+							$map_id_tps_baru[myHash([$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$no_tps_baru])]=$id_tps_baru;
 						}
 					}
 					$sql = sprintf("INSERT IGNORE INTO tps (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, id_tps, nama_tps) VALUES ".implode(',',$daftar_tps_baru_sql));
 					if ($dbconn->query($sql) === TRUE) {
 					    printf("tps baru %s terupdate\n", implode(',',$daftar_tps_baru_sql));
-					    foreach ($daftar_nama_tps_baru as $id_tps_baru){
+					    foreach ($daftar_no_tps_baru as $id_tps_baru){
 							$id_tps_terupdate[$id_tps_baru]=true;
 						}
 					} else {
@@ -399,11 +401,11 @@ function update_tps($antrian_update_tps, $dbconn){
 					    printf("Error: " . $sql . "\n" . $dbconn->error);
 					}
 	        	}else{
-        			$id_tps_terupdate[myHash([$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$nama_tps])]=true;
+        			$id_tps_terupdate[myHash([$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$no_tps])]=true;
 	        	}
 	        }
 	        if (! $id_tps){
-	        	$id_tps=$map_id_tps_baru[myHash([$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$nama_tps_baru])];
+	        	$id_tps=$map_id_tps_baru[myHash([$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$no_tps])];
 	        }
 	    	//updating suara
 	    	$url_suara = sprintf('https://pemilu2019.kpu.go.id/static/json/hhcw/ppwp/%d/%d/%d/%d/%d.json',
@@ -419,7 +421,7 @@ function update_tps($antrian_update_tps, $dbconn){
 				$photo = implode(';',$suara['images']);
 	    		$sql = sprintf("INSERT INTO suara_situngkpu_pilpres (id_provinsi,id_kotakab,id_kecamatan,id_kelurahan,id_tps,tanggal_update_suara_situngkpu_pilpres, pas1, pas2, tSah, sah, photo) VALUES (%s,%s,%s,%s,%s,'%s', %s, %s, %s, %s,'%s') ON DUPLICATE KEY UPDATE tanggal_update_suara_situngkpu_pilpres='%s', pas1=%s, pas2=%s, tSah=%s, sah=%s, photo='%s'", $id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$id_tps,$date, $pas1, $pas2, $tSah, $sah,$photo,$date, $pas1, $pas2, $tSah, $sah,$photo); //TODO ADD PHOTO
 				if ($dbconn->query($sql) === TRUE) {
-				    printf("Suara situng kpu %s diupdate\n", $nama_tps);
+				    printf("Suara situng kpu TPS %d diupdate\n", $no_tps);
 				} else {
 				    printf("Error: " . $sql . "\n" . $dbconn->error);
 				}
@@ -431,7 +433,8 @@ function update_tps($antrian_update_tps, $dbconn){
 	}
 }
 function after_kawalpemilu_situng_kpu_callback($id_provinsi, $id_kotakab, $id_kecamatan, $id_kelurahan, $nama_tps, $dbconn){
-	$sql = sprintf("SELECT * FROM suara_kawalpemilu_pilpres LEFT JOIN tps USING (id_provinsi,id_kotakab,id_kecamatan,id_kelurahan,nama_tps) LEFT JOIN suara_situngkpu_pilpres USING (id_provinsi,id_kotakab, id_kecamatan, id_kelurahan, id_tps) WHERE id_provinsi=%d AND id_kotakab=%d AND id_kecamatan=%d AND id_kelurahan=%d AND nama_tps='%s'",$id_provinsi, $id_kotakab, $id_kecamatan, $id_kelurahan, $nama_tps);
+	$no_tps = (int)substr($nama_tps,4);
+	$sql = sprintf("SELECT * FROM suara_kawalpemilu_pilpres LEFT JOIN tps USING (id_provinsi,id_kotakab,id_kecamatan,id_kelurahan,nama_tps) LEFT JOIN suara_situngkpu_pilpres USING (id_provinsi,id_kotakab, id_kecamatan, id_kelurahan, id_tps) WHERE id_provinsi=%d AND id_kotakab=%d AND id_kecamatan=%d AND id_kelurahan=%d AND no_tps=%d",$id_provinsi, $id_kotakab, $id_kecamatan, $id_kelurahan, $no_tps);
 	$antrian_update_tps = $dbconn->query($sql);
 	update_tps($antrian_update_tps,$dbconn);
 }

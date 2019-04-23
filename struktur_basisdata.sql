@@ -96,7 +96,9 @@ CREATE TABLE `suara_kawalpemilu_pilpres` (
   `tSah` int(11) DEFAULT NULL,
   `sah` int(11) DEFAULT NULL,
   `photo` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`id_provinsi`,`id_kotakab`,`id_kecamatan`,`id_kelurahan`,`nama_tps`)
+  `no_tps` int(11) GENERATED ALWAYS AS (cast(substr(`nama_tps`,4) as signed)) STORED,
+  PRIMARY KEY (`id_provinsi`,`id_kotakab`,`id_kecamatan`,`id_kelurahan`,`nama_tps`),
+  KEY `search_tps_idx` (`id_provinsi`,`id_kotakab`,`id_kecamatan`,`id_kelurahan`,`no_tps`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -137,7 +139,9 @@ CREATE TABLE `tps` (
   `id_kelurahan` int(11) NOT NULL,
   `id_tps` int(11) NOT NULL,
   `nama_tps` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`id_provinsi`,`id_kotakab`,`id_kecamatan`,`id_kelurahan`,`id_tps`)
+  `no_tps` int(11) GENERATED ALWAYS AS (cast(substr(`nama_tps`,4) as signed)) STORED,
+  PRIMARY KEY (`id_provinsi`,`id_kotakab`,`id_kecamatan`,`id_kelurahan`,`id_tps`),
+  KEY `search_tps_idx` (`id_provinsi`,`id_kotakab`,`id_kecamatan`,`id_kelurahan`,`no_tps`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -150,4 +154,4 @@ CREATE TABLE `tps` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-23  5:06:37
+-- Dump completed on 2019-04-24  6:14:33
