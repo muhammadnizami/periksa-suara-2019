@@ -33,7 +33,7 @@
         <p> Data yang muncul di bawah ini bisa saja salah. Harap crosscheck dengan sumber aslinya </p>
         <h2>Rangkuman</h2>
 <!-- APAKAH PERLU TAMPILAN TABEL RANGKUMAN? pertimbangannya adalah tidak ada artinya rangkuman dari data yang belum diperiksa dan diinterpretasi. Boleh dibilang, sebelum diperiksa dan diinterpretasi, ini data sampah, jadi rangkumannya juga sampah.-->
-<!--         <table border=1>
+         <table border=1>
 	        <tr>
 	        	<th>Perbedaan</th>
 	        	<th>Jumlah Suara</th>
@@ -112,7 +112,7 @@
 	    		<th><?php echo $result['jumlah_tps'] ?></th>
     		</tr>
 	    </table>
- -->    		<p> Jumlah TPS diperiksa: <?php
+    		<p> Jumlah TPS diperiksa: <?php
     			$sql = "SELECT COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, nama_tps);";
     			$result = $dbconn->query($sql)->fetch_assoc();
     			echo $result['jumlah_tps'];
