@@ -197,8 +197,8 @@
 		    			echo '<tr>';
 
 		    			echo '<td>';
-		    			echo 'situngkpu: <br> '.$row['tanggal_update_suara_situngkpu_pilpres'].'<br>';
-		    			echo 'kawalpemilu: <br> '.$row['tanggal_update_suara_kawalpemilu_pilpres'].'<br>';
+		    			echo 'dari situngkpu: <br> '.$row['tanggal_update_suara_situngkpu_pilpres'].'<br>';
+		    			echo 'dari kawalpemilu: <br> '.$row['tanggal_update_suara_kawalpemilu_pilpres'].'<br>';
 		    			echo '</td>';
 
 		    			echo '<td>';
