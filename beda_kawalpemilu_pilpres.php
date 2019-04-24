@@ -271,6 +271,7 @@
 						  entries = JSON.parse(response);
 						  console.log('success, response: ' + entries);
 						  reset_page_num();
+						  update_page_count();
 						  display();
 						  document.getElementById("submitbutton").disabled = false;
 					      document.getElementById("submitbutton").innerHTML = "Lihat";
@@ -328,14 +329,14 @@
 		<div id="display_div" hidden>
 			<p id="num_rows"></p>
 			<button type="button" onclick="prev_page()">Sebelumnya</button>
-			 Halaman <span id="page_num">1</span> / <span id="page_count"></span> 
+			 Halaman <select id="page_num" onchange="select_page_num(this)">1</select> / <span id="page_count"></span> 
 			 					<button type="button" onclick="next_page()">Selanjutnya</button>
 								<br> <span id="num_entries_per_page"></span> entri per halaman<br>
 								<table id="datatable" border=1 style="max-width: 100vw;"><thead id="datatable_head"><tr><th>Waktu update</th><th>TPS</th><th>Data SitungKPU</th><th style="width: 28%;">Foto Situng KPU</th><th>Data KawalPemilu</th><th style="width: 28%;">Foto KawalPemilu</th></thead></tr>
 								<tbody id="datatable_body"></tbody>
 					    		</table>
 			<button type="button" onclick="prev_page();document.getElementById('num_rows').scrollIntoView()">Sebelumnya</button>
-			 Halaman <span id="page_num_2">1</span> / <span id="page_count_2"></span> 
+			 Halaman <select id="page_num_2" onchange="select_page_num(this)">1</select> / <span id="page_count_2"></span> 
 			<button type="button" onclick="next_page();document.getElementById('num_rows').scrollIntoView()">Selanjutnya</button>
 			<p> data mungkin tidak konsisten dengan rangkuman. Hal ini karena kami menggunakan cache dan bisa saja kedua cache tidak terupdate secara bersamaan </p>
     	</div>
@@ -348,13 +349,26 @@
 			function reset_page_num(){
 				page_num=1;
 			}
+			function update_page_count(){
+				page_count=Math.ceil(entries.length/num_entries_per_page);
+				document.getElementById("page_count").innerHTML=page_count;
+				document.getElementById("page_count_2").innerHTML=page_count;
+
+				var select = document.getElementById('page_num');    
+				select.innerHTML="";
+
+				for (var i = 1; i<= page_count; i++){
+				    var option = document.createElement('option');
+				    option.value = i;
+				    option.innerHTML = i;
+				    select.options.add(option);
+				}
+				document.getElementById('page_num_2').innerHTML=select.innerHTML;
+			}
 			function display(){
 				if (entries){
-					page_count=Math.ceil(entries.length/num_entries_per_page);
-					document.getElementById("page_num").innerHTML=page_num;
-					document.getElementById("page_count").innerHTML=page_count;
-					document.getElementById("page_num_2").innerHTML=page_num;
-					document.getElementById("page_count_2").innerHTML=page_count;
+					document.getElementById("page_num").selectedIndex=page_num-1;
+					document.getElementById("page_num_2").selectedIndex=page_num-1;
 					document.getElementById("num_entries_per_page").innerHTML=num_entries_per_page;
 					document.getElementById("num_rows").innerHTML=""+entries.length+" TPS";
 					var tbody = document.getElementById("datatable_body");
@@ -427,6 +441,11 @@
 					page_num++;
 					display();
 				}
+			}
+
+			function select_page_num(el){
+				page_num = el.selectedIndex;
+				display();
 			}
 		</script>
     </body>
