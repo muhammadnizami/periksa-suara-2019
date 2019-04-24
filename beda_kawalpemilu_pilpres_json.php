@@ -1,4 +1,20 @@
 <?php
+	// define the path and name of cached file
+	$cachefile = 'cached-files-beda_kawalpemilu_pilpres_json.php'.isset($_GET['pas1_kpu_gt_kawalpemilu']) . isset($_GET['pas1_kpu_lt_kawalpemilu']) . isset($_GET['pas2_kpu_gt_kawalpemilu']) . isset($_GET['pas2_kpu_lt_kawalpemilu']) . isset($_GET['tSah_kpu_gt_kawalpemilu']) . isset($_GET['tSah_kpu_lt_kawalpemilu']) . isset($_GET['sah_kpu_gt_kawalpemilu']) . isset($_GET['sah_kpu_lt_kawalpemilu']);
+	// define how long we want to keep the file in seconds. I set mine to 5 hours.
+	$cachetime = 3600;
+	// Check if the cached file is still fresh. If it is, serve it up and exit.
+	if (file_exists($cachefile){
+		if(time() - $cachetime < filemtime($cachefile)) {
+   			include($cachefile);
+    		exit;
+    	}
+	}
+	// if there is either no file OR the file to too old, render the page and capture the HTML.
+	ob_start();
+?>
+
+<?php
 
 	include('dbconfig.php');
 
@@ -77,4 +93,12 @@
     	echo "null";
     }
 
+?>
+<?php
+	// We're done! Save the cached content to a file
+	$fp = fopen($cachefile, 'w');
+	fwrite($fp, ob_get_contents());
+	fclose($fp);
+	// finally send browser output
+	ob_end_flush();
 ?>

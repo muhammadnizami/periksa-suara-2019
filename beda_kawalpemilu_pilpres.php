@@ -1,4 +1,18 @@
 <?php
+	// define the path and name of cached file
+	$cachefile = 'cached-files-beda_kawalpemilu_pilpres.php';
+	// define how long we want to keep the file in seconds. I set mine to 5 hours.
+	$cachetime = 14;
+	// Check if the cached file is still fresh. If it is, serve it up and exit.
+	if (file_exists($cachefile) && time() - $cachetime < filemtime($cachefile)) {
+   		include($cachefile);
+    	exit;
+	}
+	// if there is either no file OR the file to too old, render the page and capture the HTML.
+	ob_start();
+?>
+
+<?php
 
 	include('dbconfig.php');
 
@@ -136,6 +150,8 @@
 			<script>
 				function onSubmit(){
 
+					document.getElementById("submitbutton").disabled = true;
+					document.getElementById("submitbutton").innerHTML = "Harap tunggu...";
 
 					$.ajax({
 						type: 'get',
@@ -146,6 +162,8 @@
 						  console.log('success, response: ' + entries);
 						  reset_page_num();
 						  display();
+						  document.getElementById("submitbutton").disabled = false;
+					      document.getElementById("submitbutton").innerHTML = "Lihat";
 						}
 
 					});
@@ -165,7 +183,7 @@
 			<input type="checkbox" name="tSah_kpu_lt_kawalpemilu" <?php if ($check_all or isset($_GET['tSah_kpu_lt_kawalpemilu'])){ echo 'checked';} ?>> Suara Tidak Sah Situng KPU < Suara Tidak Sah KawalPemilu<br>
 			<input type="checkbox" name="sah_kpu_gt_kawalpemilu" <?php if ($check_all or isset($_GET['sah_kpu_gt_kawalpemilu'])){ echo 'checked';} ?>> Suara Sah Situng KPU > Suara Sah KawalPemilu<br>
 			<input type="checkbox" name="sah_kpu_lt_kawalpemilu" <?php if ($check_all or isset($_GET['sah_kpu_lt_kawalpemilu'])){ echo 'checked';} ?>> Suara Sah Situng KPU < Suara Sah KawalPemilu<br>
-			<button type="submit">Lihat</button>
+			<button type="submit" id="submitbutton">Lihat</button>
 		</form>
 		<div id="display_div" hidden>
 			<p id="num_rows"></p>
@@ -173,7 +191,7 @@
 			 Halaman <span id="page_num">1</span> / <span id="page_count"></span> 
 			 					<button type="button" onclick="next_page()">Selanjutnya</button>
 								<br> <span id="num_entries_per_page"></span> entri per halaman<br>
-								<table id="datatable" border=1 style="max-width: 100%;"><thead id="datatable_head"><tr><th>Waktu update</th><th>TPS</th><th>Data SitungKPU</th><th style="width: 30%;">Foto Situng KPU</th><th>Data KawalPemilu</th><th style="width: 30%;">Foto KawalPemilu</th></thead></tr>
+								<table id="datatable" border=1 style="max-width: 100%;"><thead id="datatable_head"><tr><th>Waktu update</th><th>TPS</th><th>Data SitungKPU</th><th style="width: 28%;">Foto Situng KPU</th><th>Data KawalPemilu</th><th style="width: 28%;">Foto KawalPemilu</th></thead></tr>
 								<tbody id="datatable_body"></tbody>
 					    		</table>
 			<button type="button" onclick="prev_page()">Sebelumnya</button>
@@ -242,3 +260,12 @@
 </html>
 
 
+
+<?php
+	// We're done! Save the cached content to a file
+	$fp = fopen($cachefile, 'w');
+	fwrite($fp, ob_get_contents());
+	fclose($fp);
+	// finally send browser output
+	ob_end_flush();
+?>
