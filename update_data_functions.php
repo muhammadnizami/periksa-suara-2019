@@ -406,6 +406,9 @@ function update_tps($antrian_update_tps, $dbconn){
 					}
 	        	}else{
         			$id_tps_terupdate[myHash([$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$no_tps])]=true;
+        			$tps_row = $tps->fetch_assoc();
+        			$id_tps_baru = $tps_row['id_tps'];
+        			$map_id_tps_baru[myHash([$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$no_tps])]=$id_tps_baru;
 	        	}
 	        }
 	        if (! $id_tps){
