@@ -204,7 +204,7 @@
 						entry = entries[i];
 						row = tbody.insertRow();
 						row.insertCell().innerHTML="dari situngkpu: <br> " + entry["tanggal_update_suara_situngkpu_pilpres"] + "<br> dari kawalpemilu: <br> " + entry["tanggal_update_suara_kawalpemilu_pilpres"] + "<br>";
-						row.insertCell().innerHTML="Provinsi: "+ entry["nama_provinsi"] + "<br>Kabupaten/Kota: "+ entry["nama_kotakab"] + "<br>	Kecamatan: "+ entry["nama_kecamatan"] + "<br>Kelurahan: "+ entry["nama_kelurahan"] + "<br>";
+						row.insertCell().innerHTML="Provinsi: "+ entry["nama_provinsi"] + "<br>Kabupaten/Kota: "+ entry["nama_kotakab"] + "<br>	Kecamatan: "+ entry["nama_kecamatan"] + "<br>Kelurahan: "+ entry["nama_kelurahan"] + "<br>" + entry["nama_tps"] + "<br>";
 						row.insertCell().innerHTML=" pas1: " + entry["situngkpupas1"] + "<br> pas2: " + entry["situngkpupas2"] + "<br> tidak Sah: " + entry["situngkputSah"] + "<br> sah: " + entry["situngkpusah"] + "<br>";
 						id_tps = entry["id_tps"];
 						id_tps_str = id_tps.toString();
