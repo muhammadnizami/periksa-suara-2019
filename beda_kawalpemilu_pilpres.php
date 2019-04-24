@@ -429,7 +429,6 @@
 				}
 			}
 		</script>
-		<script> onSubmit();</script>
     </body>
 </html>
 
