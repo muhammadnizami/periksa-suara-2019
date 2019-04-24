@@ -173,7 +173,7 @@
 			 Halaman <span id="page_num">1</span> / <span id="page_count"></span> 
 			 					<button type="button" onclick="next_page()">Selanjutnya</button>
 								<br> <span id="num_entries_per_page"></span> entri per halaman<br>
-								<table id="datatable" border=1 style="max-width: 100%;"><thead id="datatable_head"><tr><th>Waktu update</th><th>TPS</th><th>Data SitungKPU</th><th style="max-width: 30%;">Foto Situng KPU</th><th>Data KawalPemilu</th><th style="max-width: 30%;">Foto KawalPemilu</th></thead></tr>
+								<table id="datatable" border=1 style="max-width: 100%;"><thead id="datatable_head"><tr><th>Waktu update</th><th>TPS</th><th>Data SitungKPU</th><th style="width: 30%;">Foto Situng KPU</th><th>Data KawalPemilu</th><th style="width: 30%;">Foto KawalPemilu</th></thead></tr>
 								<tbody id="datatable_body"></tbody>
 					    		</table>
 			<button type="button" onclick="prev_page()">Sebelumnya</button>
@@ -210,12 +210,12 @@
 						id_tps_str = id_tps.toString();
 						var img = document.createElement("img");
 						img.src="https://pemilu2019.kpu.go.id/img/c/" + id_tps_str.substring(0,3) + "/" + id_tps.substring(3,6) + "/" + id_tps_str + "/" + entry["situngkpuphoto"].split(";")[1];
-						img.style="max-width:100%;";
+						img.style="width:100%;";
 						row.insertCell().appendChild(img);
 						row.insertCell().innerHTML=" pas1: " + entry["kawalpemilupas1"] + "<br> pas2: " + entry["kawalpemilupas2"] + "<br> tidak Sah: " + entry["kawalpemilutSah"] + "<br> sah: " + entry["kawalpemilusah"] + "<br> ";
 						var img2 = document.createElement("img");
 						img2.src = entry["kawalpemiluphoto"];
-						img2.style="max-width:100%;";
+						img2.style="width:100%;";
 						row.insertCell().appendChild(img2);
 					}
 					document.getElementById("display_div").removeAttribute("hidden");
