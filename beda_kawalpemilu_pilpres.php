@@ -155,7 +155,17 @@
 		    </div>
 		</div>
         <h2> Rangkuman***</h2>
-        <button class="trigger_popup_fricc" id="popup-trigger-2"> Lihat rangkuman </button>
+		<p> Jumlah TPS yang telah dicocokkan: <?php
+			$sql = "SELECT COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps);";
+			$result = $dbconn->query($sql)->fetch_assoc();
+			echo $result['jumlah_tps'];
+		?></p>
+		<p> Jumlah TPS dengan data berbeda: <?php
+			$sql = "SELECT COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.pas1 <> suara_kawalpemilu_pilpres.pas1 OR suara_situngkpu_pilpres.pas2 <> suara_kawalpemilu_pilpres.pas2 OR suara_situngkpu_pilpres.tSah <> suara_kawalpemilu_pilpres.tSah OR suara_situngkpu_pilpres.sah <> suara_kawalpemilu_pilpres.sah;";
+			$result = $dbconn->query($sql)->fetch_assoc();
+			echo $result['jumlah_tps'];
+		?></p>
+        <button class="trigger_popup_fricc" id="popup-trigger-2"> Lihat lebih banyak rangkuman </button>
 <!-- APAKAH PERLU TAMPILAN TABEL RANGKUMAN? pertimbangannya adalah tidak ada artinya rangkuman dari data yang belum diperiksa dan diinterpretasi. Boleh dibilang, sebelum diperiksa dan diinterpretasi, ini data sampah, jadi rangkumannya juga sampah.-->
 
 		<div class="hover_bkgr_fricc" id="popup-hover-2">
@@ -241,16 +251,6 @@
 				    		<th><?php echo $result['jumlah_tps'] ?></th>
 			    		</tr>
 				    </table>
-			    		<p> Jumlah TPS yang telah dicocokkan: <?php
-			    			$sql = "SELECT COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps);";
-			    			$result = $dbconn->query($sql)->fetch_assoc();
-			    			echo $result['jumlah_tps'];
-						?></p>
-			    		<p> Jumlah TPS dengan data berbeda: <?php
-			    			$sql = "SELECT COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.pas1 <> suara_kawalpemilu_pilpres.pas1 OR suara_situngkpu_pilpres.pas2 <> suara_kawalpemilu_pilpres.pas2 OR suara_situngkpu_pilpres.tSah <> suara_kawalpemilu_pilpres.tSah OR suara_situngkpu_pilpres.sah <> suara_kawalpemilu_pilpres.sah;";
-			    			$result = $dbconn->query($sql)->fetch_assoc();
-			    			echo $result['jumlah_tps'];
-						?></p>
 			        <p> ***Untuk memahami rangkuman, harap perhatikan macam-macam penyebab kenapa data berbeda. Arti dari rangkuman ini harus dilihat dari sumber kesalahannya. Sumber kesalahan bisa dari mana saja, termasuk dari pengumpulan data di situs ini. Silakan lihat data yang lebih detil di bagian bawah </p>
 		    </div>
 		</div>
