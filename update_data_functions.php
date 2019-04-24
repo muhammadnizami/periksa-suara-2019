@@ -3,13 +3,17 @@
 
 include('dbconfig.php');
 
+define('PROTOKOL_KPU',"https");
+define('PROTOKOL_KAWALPEMILU',"https");
 $server_kpu = "pemilu2019.kpu.go.id";
 $server_kawalpemilu = "kawal-c1.appspot.com";
 
 $waktu_coba_lagi = 5;
+$max_waktu_coba_lagi = 300;
 
 function file_get_contents_no_verify_continue_try($url){
 	$waktu_coba_lagi = $GLOBALS['waktu_coba_lagi'];
+	$max_waktu_coba_lagi = $GLOBALS['max_waktu_coba_lagi'];
 	$percobaan=0;
 	do{
 
@@ -20,7 +24,7 @@ function file_get_contents_no_verify_continue_try($url){
 		    ),
 		);  
 		$result= file_get_contents($url, false, stream_context_create($arrContextOptions));
-		sleep($waktu_coba_lagi*$percobaan);
+		sleep(min($max_waktu_coba_lagi,$waktu_coba_lagi*$percobaan));
 		$percobaan = $percobaan + 1;
 	}while ($result==NULL);
 
@@ -47,7 +51,7 @@ function updateDaftarTPSKPU(){
 	    printf("Error: " . $sql . "\n" . $dbconn->error);
 	}
 
-	$url_nasional= sprintf("https://%s/static/json/wilayah/0.json", $server_kpu);
+	$url_nasional= sprintf(PROTOKOL_KPU."://%s/static/json/wilayah/0.json", $server_kpu);
 	$json_nasional = file_get_contents_no_verify_continue_try($url_nasional);
 
 	if ($json_nasional==NULL){
@@ -65,7 +69,7 @@ function updateDaftarTPSKPU(){
 		}
 
 
-		$url_provinsi=sprintf("https://%s/static/json/wilayah/%d.json", $server_kpu, $id_provinsi);
+		$url_provinsi=sprintf(PROTOKOL_KPU."://%s/static/json/wilayah/%d.json", $server_kpu, $id_provinsi);
 		$json_provinsi = file_get_contents_no_verify_continue_try($url_provinsi);
 		if ($json_provinsi==NULL){
 			return false;
@@ -81,7 +85,7 @@ function updateDaftarTPSKPU(){
 			    printf("Error: " . $sql . "\n" . $dbconn->error);
 			}
 
-			$url_kotakab=sprintf("https://%s/static/json/wilayah/%d/%d.json",$server_kpu,$id_provinsi,$id_kotakab);
+			$url_kotakab=sprintf(PROTOKOL_KPU."://%s/static/json/wilayah/%d/%d.json",$server_kpu,$id_provinsi,$id_kotakab);
 			$json_kotakab = file_get_contents_no_verify_continue_try($url_kotakab);
 			if ($json_kotakab==NULL){
 				return false;
@@ -98,7 +102,7 @@ function updateDaftarTPSKPU(){
 				}
 
 
-				$url_kecamatan=sprintf("https://%s/static/json/wilayah/%d/%d/%d.json",$server_kpu,$id_provinsi,$id_kotakab,$id_kecamatan);
+				$url_kecamatan=sprintf(PROTOKOL_KPU."://%s/static/json/wilayah/%d/%d/%d.json",$server_kpu,$id_provinsi,$id_kotakab,$id_kecamatan);
 				$json_kecamatan = file_get_contents_no_verify_continue_try($url_kecamatan);
 				if ($json_kecamatan==NULL){
 					return false;
@@ -115,7 +119,7 @@ function updateDaftarTPSKPU(){
 					}
 
 
-					$url_kelurahan=sprintf("https://%s/static/json/wilayah/%d/%d/%d/%d.json",$server_kpu,$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan);
+					$url_kelurahan=sprintf(PROTOKOL_KPU."://%s/static/json/wilayah/%d/%d/%d/%d.json",$server_kpu,$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan);
 					$json_kelurahan = file_get_contents_no_verify_continue_try($url_kelurahan);
 					if ($json_kelurahan==NULL){
 						return false;
@@ -150,27 +154,27 @@ function updateSuaraKawalPemilu($callback=0){
 	    printf("Error: " . $sql . "\n" . $dbconn->error);
 	}
 
-	$url_nasional = sprintf("https://%s/api/c/0",$server_kawalpemilu);
+	$url_nasional = sprintf(PROTOKOL_KAWALPEMILU."://%s/api/c/0",$server_kawalpemilu);
 	$json_nasional = file_get_contents_no_verify_continue_try($url_nasional);
 	$daftar_provinsi = json_decode($json_nasional,true);
 	foreach($daftar_provinsi["data"] as $id_provinsi => $detail_provinsi){
 		if (array_key_exists("cakupan",$detail_provinsi["sum"]) and $detail_provinsi["sum"]["cakupan"] > 0){
-			$url_provinsi = sprintf("https://%s/api/c/%d",$server_kawalpemilu, $id_provinsi);
+			$url_provinsi = sprintf(PROTOKOL_KAWALPEMILU."://%s/api/c/%d",$server_kawalpemilu, $id_provinsi);
 			$json_provinsi = file_get_contents_no_verify_continue_try($url_provinsi);
 			$daftar_kotakab = json_decode($json_provinsi,true);
 			foreach($daftar_kotakab["data"] as $id_kotakab => $detail_kotakab){
 				if (array_key_exists("cakupan",$detail_kotakab["sum"]) and $detail_kotakab["sum"]["cakupan"] > 0){
-					$url_kotakab = sprintf("https://%s/api/c/%d",$server_kawalpemilu, $id_kotakab);
+					$url_kotakab = sprintf(PROTOKOL_KAWALPEMILU."://%s/api/c/%d",$server_kawalpemilu, $id_kotakab);
 					$json_kotakab = file_get_contents_no_verify_continue_try($url_kotakab);
 					$daftar_kecamatan = json_decode($json_kotakab,true);
 					foreach($daftar_kecamatan["data"] as $id_kecamatan => $detail_kecamatan){
 						if (array_key_exists("cakupan",$detail_kecamatan["sum"]) and $detail_kecamatan["sum"]["cakupan"] > 0){
-							$url_kecamatan = sprintf("https://%s/api/c/%d",$server_kawalpemilu, $id_kecamatan);
+							$url_kecamatan = sprintf(PROTOKOL_KAWALPEMILU."://%s/api/c/%d",$server_kawalpemilu, $id_kecamatan);
 							$json_kecamatan = file_get_contents_no_verify_continue_try($url_kecamatan);
 							$daftar_kelurahan = json_decode($json_kecamatan,true);
 							foreach($daftar_kelurahan["data"] as $id_kelurahan => $detail_kelurahan){
 								if (array_key_exists("cakupan",$detail_kelurahan["sum"]) and $detail_kelurahan["sum"]["cakupan"] > 0){
-									$url_kelurahan = sprintf("https://%s/api/c/%d",$server_kawalpemilu, $id_kelurahan);
+									$url_kelurahan = sprintf(PROTOKOL_KAWALPEMILU."://%s/api/c/%d",$server_kawalpemilu, $id_kelurahan);
 									$json_kelurahan = file_get_contents_no_verify_continue_try($url_kelurahan);
 									$daftar_tps = json_decode($json_kelurahan,true);
 									foreach($daftar_tps["data"] as $no_tps => $detail_tps){
@@ -256,7 +260,7 @@ function update_tps($antrian_update_tps, $dbconn){
 	        	$sql = sprintf("SELECT * FROM provinsi WHERE id_provinsi=%d",$id_provinsi);
 	        	$provinsi = $dbconn->query($sql);
 	        	if ($provinsi->num_rows == 0){
-					$url_nasional= sprintf("https://%s/static/json/wilayah/0.json", $server_kpu);
+					$url_nasional= sprintf(PROTOKOL_KPU."://%s/static/json/wilayah/0.json", $server_kpu);
 					$json_nasional = file_get_contents_no_verify_continue_try($url_nasional);
 					$daftar_provinsi = json_decode($json_nasional,true);
 					$daftar_provinsi_baru_sql = array();
@@ -286,7 +290,7 @@ function update_tps($antrian_update_tps, $dbconn){
 	        	$sql = sprintf("SELECT * FROM kotakab WHERE id_provinsi=%d AND id_kotakab=%d",$id_provinsi,$id_kotakab);
 	        	$kotakab = $dbconn->query($sql);
 	        	if ($kotakab->num_rows == 0){
-					$url_provinsi= sprintf("https://%s/static/json/wilayah/%d.json", $server_kpu,$id_provinsi);
+					$url_provinsi= sprintf(PROTOKOL_KPU."://%s/static/json/wilayah/%d.json", $server_kpu,$id_provinsi);
 					$json_provinsi = file_get_contents_no_verify_continue_try($url_provinsi);
 					$daftar_kotakab = json_decode($json_provinsi,true);
 					$daftar_kotakab_baru_sql = array();
@@ -316,7 +320,7 @@ function update_tps($antrian_update_tps, $dbconn){
 	        	$sql = sprintf("SELECT * FROM kecamatan WHERE id_provinsi=%d AND id_kotakab=%d AND id_kecamatan = %d",$id_provinsi,$id_kotakab,$id_kecamatan);
 	        	$kecamatan = $dbconn->query($sql);
 	        	if ($kecamatan->num_rows == 0){
-					$url_kotakab= sprintf("https://%s/static/json/wilayah/%d/%d.json", $server_kpu,$id_provinsi,$id_kotakab);
+					$url_kotakab= sprintf(PROTOKOL_KPU."://%s/static/json/wilayah/%d/%d.json", $server_kpu,$id_provinsi,$id_kotakab);
 					$json_kotakab = file_get_contents_no_verify_continue_try($url_kotakab);
 					$daftar_kecamatan = json_decode($json_kotakab,true);
 					$daftar_kecamatan_baru_sql = array();
@@ -346,7 +350,7 @@ function update_tps($antrian_update_tps, $dbconn){
 	        	$sql = sprintf("SELECT * FROM kelurahan WHERE id_provinsi=%d AND id_kotakab=%d AND  id_kecamatan=%d AND id_kelurahan = %d ",$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan);
 	        	$kelurahan = $dbconn->query($sql);
 	        	if ($kelurahan->num_rows == 0){
-					$url_kecamatan= sprintf("https://%s/static/json/wilayah/%d/%d/%d.json", $server_kpu,$id_provinsi,$id_kotakab,$id_kecamatan);
+					$url_kecamatan= sprintf(PROTOKOL_KPU."://%s/static/json/wilayah/%d/%d/%d.json", $server_kpu,$id_provinsi,$id_kotakab,$id_kecamatan);
 					$json_kecamatan = file_get_contents_no_verify_continue_try($url_kecamatan);
 					$daftar_kelurahan = json_decode($json_kecamatan,true);
 					$daftar_kelurahan_baru_sql = array();
@@ -376,7 +380,7 @@ function update_tps($antrian_update_tps, $dbconn){
 	        	$sql = sprintf("SELECT * FROM tps WHERE id_provinsi=%d AND id_kotakab=%d AND id_kecamatan=%d AND id_kelurahan = %d AND no_tps = %d",$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$no_tps);
 	        	$tps = $dbconn->query($sql);
 	        	if ($tps->num_rows == 0){
-					$url_kelurahan= sprintf("https://%s/static/json/wilayah/%d/%d/%d/%d.json", $server_kpu,$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan);
+					$url_kelurahan= sprintf(PROTOKOL_KPU."://%s/static/json/wilayah/%d/%d/%d/%d.json", $server_kpu,$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan);
 					$json_kelurahan = file_get_contents_no_verify_continue_try($url_kelurahan);
 					$daftar_tps = json_decode($json_kelurahan,true);
 					$daftar_tps_baru_sql = array();
@@ -408,7 +412,7 @@ function update_tps($antrian_update_tps, $dbconn){
 	        	$id_tps=$map_id_tps_baru[myHash([$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$no_tps])];
 	        }
 	    	//updating suara
-	    	$url_suara = sprintf('https://pemilu2019.kpu.go.id/static/json/hhcw/ppwp/%d/%d/%d/%d/%d.json',
+	    	$url_suara = sprintf(PROTOKOL_KPU."://".$server_kpu."/static/json/hhcw/ppwp/%d/%d/%d/%d/%d.json",
 	    		$id_provinsi, $id_kotakab, $id_kecamatan, $id_kelurahan, $id_tps);
 	    	$json_suara = file_get_contents_no_verify_continue_try($url_suara);
 	    	$suara = json_decode($json_suara,true);
