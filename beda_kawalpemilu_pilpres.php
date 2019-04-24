@@ -1,12 +1,26 @@
 <?php
 	// define the path and name of cached file
 	$cachefile = 'cached-files-beda_kawalpemilu_pilpres.php';
-	// define how long we want to keep the file in seconds. I set mine to 5 hours.
-	$cachetime = 14;
+	// define how long we want to keep the file in seconds.
+	$cachetime = 20;
 	// Check if the cached file is still fresh. If it is, serve it up and exit.
-	if (file_exists($cachefile) && time() - $cachetime < filemtime($cachefile)) {
-   		include($cachefile);
-    	exit;
+	if (file_exists($cachefile)){
+		if (time() - $cachetime < filemtime($cachefile)) {
+	   		include($cachefile);
+	    	exit;
+    	}else{ignore_user_abort(true);
+			set_time_limit(0);
+
+			ob_start();
+			// do initial processing here
+			include($cachefile); // send the response
+			header('Connection: close');
+			header('Content-Length: '.ob_get_length());
+			ob_end_flush();
+			ob_flush();
+			flush();
+
+    	}
 	}
 	// if there is either no file OR the file to too old, render the page and capture the HTML.
 	ob_start();
@@ -197,6 +211,7 @@
 			<button type="button" onclick="prev_page()">Sebelumnya</button>
 			 Halaman <span id="page_num_2">1</span> / <span id="page_count_2"></span> 
 			<button type="button" onclick="next_page()">Selanjutnya</button>
+			<p> data mungkin tidak konsisten dengan rangkuman. Hal ini karena kami menggunakan cache dan bisa saja kedua cache tidak terupdate secara bersamaan </p>
     	</div>
 
 		<script>
