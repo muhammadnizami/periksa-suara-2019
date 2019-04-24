@@ -30,7 +30,7 @@
         <p> Ini dibuat sebagai alat bantu saja untuk memeriksa kembali data. Hasil yang muncul di situs ini bukanlah sebuah pernyataan ataupun publikasi resmi dari organisasi ataupun pihak apapun.
         </p>
         <p> Data tidak selalu data terbaru dan tidak lengkap. Data hanya diupdate kadang-kadang dan hanya sebagian saja. </p>
-        <p> Data yang muncul di bawah ini bisa saja salah. Harap crosscheck dengan sumber aslinya </p>
+        <p> Data yang muncul di bawah ini bisa saja salah. Harap crosscheck dengan sumber aslinya. Data di situs ini hanya untuk membantu mendeteksi dan tidak dapat dijadikan bukti apapun. </p>
         <p> ***Untuk memahami rangkuman, harap perhatikan macam-macam penyebab kenapa data berbeda. Arti dari rangkuman ini harus dilihat dari sumber kesalahannya. Sumber kesalahan bisa dari mana saja, termasuk dari pengumpulan data di situs ini. Silakan lihat data yang lebih detil di bagian bawah </p>
         <h2>Rangkuman***</h2>
 <!-- APAKAH PERLU TAMPILAN TABEL RANGKUMAN? pertimbangannya adalah tidak ada artinya rangkuman dari data yang belum diperiksa dan diinterpretasi. Boleh dibilang, sebelum diperiksa dan diinterpretasi, ini data sampah, jadi rangkumannya juga sampah.-->
