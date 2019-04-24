@@ -227,7 +227,7 @@ function updateSuaraKPUBerdasarkanKawalPemiluTerbaru(){
 	    printf("Error: " . $sql . "\n" . $dbconn->error);
 	}
 
-	$sql = "SELECT * FROM suara_kawalpemilu_pilpres LEFT JOIN tps USING (id_provinsi,id_kotakab,id_kecamatan,id_kelurahan,no_tps) LEFT JOIN suara_situngkpu_pilpres USING (id_provinsi,id_kotakab, id_kecamatan, id_kelurahan, id_tps) WHERE tanggal_update_suara_situngkpu_pilpres IS NULL OR tanggal_update_suara_situngkpu_pilpres<tanggal_update_suara_kawalpemilu_pilpres";
+	$sql = "SELECT id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, id_tps, tps.nama_tps, no_tps FROM suara_kawalpemilu_pilpres LEFT JOIN tps USING (id_provinsi,id_kotakab,id_kecamatan,id_kelurahan,no_tps) LEFT JOIN suara_situngkpu_pilpres USING (id_provinsi,id_kotakab, id_kecamatan, id_kelurahan, id_tps) WHERE tanggal_update_suara_situngkpu_pilpres IS NULL OR tanggal_update_suara_situngkpu_pilpres<tanggal_update_suara_kawalpemilu_pilpres ORDER BY tanggal_update_suara_situngkpu_pilpres ASC";
 	$antrian_update_tps=$dbconn->query($sql);
 	update_tps($antrian_update_tps, $dbconn);
 	$dbconn->close();
