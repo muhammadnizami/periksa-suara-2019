@@ -444,7 +444,7 @@
 			}
 
 			function select_page_num(el){
-				page_num = el.selectedIndex;
+				page_num = el.selectedIndex+1;
 				display();
 			}
 		</script>
