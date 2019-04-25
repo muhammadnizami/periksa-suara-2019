@@ -402,7 +402,7 @@
 						if (entry["kawalpemilusah"] != entry["situngkpusah"]){
 							sah = "<em>"+sah+"</em>";
 						}
-						row.insertCell().innerHTML=" pas1: " + pas1 + "<br> pas2: " + pas2 + "<br> tidak Sah: " + tSah + "<br> sah: " + sah + "<br> ";
+						row.insertCell().innerHTML=" pas1: " + pas1 + "<br> pas2: " + pas2 + "<br> sah: " + sah + "<br> " + "<br> tidak Sah: " + tSah;
 						id_tps = entry["id_tps"];
 						id_tps_str = id_tps.toString();
 						var img = document.createElement("img");
@@ -425,7 +425,7 @@
 						if (entry["kawalpemilusah"] != entry["situngkpusah"]){
 							sah = "<em>"+sah+"</em>";
 						}
-						row.insertCell().innerHTML=" pas1: " + pas1 + "<br> pas2: " + pas2 + "<br> tidak Sah: " + tSah + "<br> sah: " + sah + "<br> ";
+						row.insertCell().innerHTML=" pas1: " + pas1 + "<br> pas2: " + pas2 + "<br> sah: " + sah + "<br> " + "<br> tidak Sah: " + tSah;
 						var img2 = document.createElement("img");
 						img2.src = entry["kawalpemiluphoto"];
 						img2.style="width:100%;";
