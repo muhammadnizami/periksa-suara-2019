@@ -105,6 +105,7 @@
     	echo "null";
     }
 
+	$dbconn->close();
 ?>
 <?php
 	// We're done! Save the cached content to a file
