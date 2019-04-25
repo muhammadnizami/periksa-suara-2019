@@ -119,6 +119,14 @@
 			em{
 				text-decoration: underline;
 			}
+			#submitbutton {
+			    cursor: pointer;
+			    font-size: 20px;
+			    margin: 20px;
+			    display: inline-block;
+			    font-weight: bold;
+			    width: 100vw;
+			}
 		</style>
 		<script>
 			$(window).on('load', function () {
