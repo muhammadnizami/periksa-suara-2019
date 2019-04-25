@@ -240,6 +240,10 @@ function update_tps($antrian_update_tps, $dbconn){
 	$server_kawalpemilu = $GLOBALS['server_kawalpemilu'];
 	$server_kpu = $GLOBALS['server_kpu'];
 	if ($antrian_update_tps->num_rows > 0) {
+		// database update caching
+		$antrian_tps_baru = [];
+		$id_kelurahan_sekarang_antrian_tps_baru = null;
+
     	// update data of each row
     	$id_provinsi_terupdate=array();
     	$id_kotakab_terupdate=array();
@@ -254,6 +258,17 @@ function update_tps($antrian_update_tps, $dbconn){
 	    	$id_tps=$row['id_tps'];
 	    	$nama_tps=$row['nama_tps'];
 	    	$no_tps=$row['no_tps'];
+
+	    	if ($id_kelurahan_sekarang_antrian_tps_baru != $id_kelurahan and sizeof($antrian_tps_baru)>0){
+	    		$sql = "INSERT INTO suara_situngkpu_pilpres (id_provinsi,id_kotakab,id_kecamatan,id_kelurahan,id_tps,tanggal_update_suara_situngkpu_pilpres, pas1, pas2, tSah, sah, photo) VALUES ".implode(',',$antrian_tps_baru)."  ON DUPLICATE KEY UPDATE tanggal_update_suara_situngkpu_pilpres=VALUES(tanggal_update_suara_situngkpu_pilpres), pas1=VALUES(pas1), pas2=VALUES(pas2), tSah=VALUES(tSah), sah=VALUES(sah), photo=VALUES(photo)";
+	    		$id_kelurahan_sekarang_antrian_tps_baru = $id_kelurahan;
+				if ($dbconn->query($sql) === TRUE) {
+			    	printf("Suara situng kpu TPS-TPS di kelurahan %d diupdate\n", $id_kelurahan);
+				    $antrian_tps_baru = [];
+				} else {
+				    printf("Error: " . $sql . "\n" . $dbconn->error);
+				}
+	    	}
 
 	    	//updating details
 	        if (! array_key_exists($id_provinsi,$id_provinsi_terupdate)){
@@ -426,15 +441,20 @@ function update_tps($antrian_update_tps, $dbconn){
 	    		$sah = $suara['suara_sah'];
 				$date = date('Y-m-d H:i:s');
 				$photo = implode(';',$suara['images']);
-	    		$sql = sprintf("INSERT INTO suara_situngkpu_pilpres (id_provinsi,id_kotakab,id_kecamatan,id_kelurahan,id_tps,tanggal_update_suara_situngkpu_pilpres, pas1, pas2, tSah, sah, photo) VALUES (%s,%s,%s,%s,%s,'%s', %s, %s, %s, %s,'%s') ON DUPLICATE KEY UPDATE tanggal_update_suara_situngkpu_pilpres='%s', pas1=%s, pas2=%s, tSah=%s, sah=%s, photo='%s'", $id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$id_tps,$date, $pas1, $pas2, $tSah, $sah,$photo,$date, $pas1, $pas2, $tSah, $sah,$photo); //TODO ADD PHOTO
-				if ($dbconn->query($sql) === TRUE) {
-				    printf("Suara situng kpu TPS %d diupdate\n", $no_tps);
-				} else {
-				    printf("Error: " . $sql . "\n" . $dbconn->error);
-				}
+	    		$tps_baru = sprintf( "(%s,%s,%s,%s,%s,'%s', %s, %s, %s, %s,'%s')", $id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$id_tps,$date, $pas1, $pas2, $tSah, $sah,$photo);
+	    		array_push($antrian_tps_baru,$tps_baru);
 
 	    	}
 	    }
+    	if (sizeof($antrian_tps_baru)>0){
+    		$sql = "INSERT INTO suara_situngkpu_pilpres (id_provinsi,id_kotakab,id_kecamatan,id_kelurahan,id_tps,tanggal_update_suara_situngkpu_pilpres, pas1, pas2, tSah, sah, photo) VALUES ".implode(',',$antrian_tps_baru)."  ON DUPLICATE KEY UPDATE tanggal_update_suara_situngkpu_pilpres=VALUES(tanggal_update_suara_situngkpu_pilpres), pas1=VALUES(pas1), pas2=VALUES(pas2), tSah=VALUES(tSah), sah=VALUES(sah), photo=VALUES(photo)";
+			if ($dbconn->query($sql) === TRUE) {
+			    printf("Suara situng kpu TPS-TPS di kelurahan %d diupdate\n", $id_kelurahan);
+			    $antrian_tps_baru = [];
+			} else {
+			    printf("Error: " . $sql . "\n" . $dbconn->error);
+			}
+    	}
 	} else {
 	    printf("0 results");
 	}
