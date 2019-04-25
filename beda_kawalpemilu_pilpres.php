@@ -263,7 +263,7 @@
 		    </div>
 		</div>
 
-		<h2>Lihat data yang berbeda</h2>
+		<h2>Lihat satu per satu data yang berbeda</h2>
 		<form id="filters" onsubmit="onSubmit(); return false;">
 			<script>
 				function onSubmit(){
