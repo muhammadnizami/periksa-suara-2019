@@ -277,7 +277,6 @@
 						data: $('#filters').serialize(),
 						success: function (response) {
 						  entries = JSON.parse(response);
-						  console.log('success, response: ' + entries);
 						  reset_page_num();
 						  update_page_count();
 						  display();
