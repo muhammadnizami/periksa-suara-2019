@@ -184,7 +184,7 @@
 				        <tr>
 				        	<th>Perbedaan</th>
 				        	<th>Jumlah Suara</th>
-				        	<th>Jumlah TPS</th>
+				        	<th>Jumlah Entri</th>
 				    	</tr>
 				    	<tr>
 				    		<td> Paslon 01 Situng KPU > Paslon 01 KawalPemilu </td>
@@ -263,7 +263,7 @@
 		    </div>
 		</div>
 
-		<h2>Lihat satu per satu data yang berbeda</h2>
+		<h2>Lihat satu per satu entri yang berbeda</h2>
 		<form id="filters" onsubmit="onSubmit(); return false;">
 			<script>
 				function onSubmit(){
@@ -378,7 +378,7 @@
 					document.getElementById("page_num").selectedIndex=page_num-1;
 					document.getElementById("page_num_2").selectedIndex=page_num-1;
 					document.getElementById("num_entries_per_page").innerHTML=num_entries_per_page;
-					document.getElementById("num_rows").innerHTML=""+entries.length+" TPS";
+					document.getElementById("num_rows").innerHTML=""+entries.length+" Entri";
 					var tbody = document.getElementById("datatable_body");
 					tbody.innerHTML="";
 					for (var i=(page_num-1)*num_entries_per_page; i < (page_num)*num_entries_per_page && i < entries.length; i++){
