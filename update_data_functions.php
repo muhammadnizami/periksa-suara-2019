@@ -187,18 +187,39 @@ function updateSuaraKawalPemilu($callback=0){
 											$sah = $sum['sah'];
 											$photos_list=$detail_tps['photos'];
 											$photo=NULL;
+											$nama_tps = sprintf('TPS %0'.strval(floor(log10(sizeof($daftar_tps["data"]))+1)).'d',$no_tps);
 											foreach($photos_list as $photo_url => $detail_photo){
 												$sum = $detail_photo["sum"];
-												if (array_key_exists("pas1",$sum) and array_key_exists("pas2",$sum) and array_key_exists("tSah",$sum) and array_key_exists("sah",$sum) and $pas1==$sum['pas1'] and $pas2==$sum['pas2'] and $tSah==$sum['tSah'] and $sah==$sum['sah']){
+												if (array_key_exists("pas1",$sum) and array_key_exists("pas2",$sum) and array_key_exists("tSah",$sum) and array_key_exists("sah",$sum)){
+													$pas1 = $sum['pas1'];
+													$pas2 = $sum['pas2'];
+													$tSah = $sum['tSah'];
+													$sah = $sum['sah'];
 													$photo=$photo_url;
+													$tipe_form = $detail_photo['c1']['plano']==1?'c1-plano':'c1'; 
+													$sql = sprintf("INSERT INTO suara_kawalpemilu_pilpres (id_provinsi,id_kotakab,id_kecamatan,id_kelurahan,nama_tps,tanggal_update_suara_kawalpemilu_pilpres, pas1, pas2, tSah, sah, photo, tipe_form) VALUES (%s,%s,%s,%s,'%s','%s', %s, %s, %s, %s,'%s', '%s') ON DUPLICATE KEY UPDATE tanggal_update_suara_kawalpemilu_pilpres='%s', pas1=%s, pas2=%s, tSah=%s, sah=%s, photo='%s'", $id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$nama_tps,$date, $pas1, $pas2, $tSah, $sah,$photo,$tipe_form,$date, $pas1, $pas2, $tSah, $sah,$photo); //TODO ADD PHOTO
+													if ($dbconn->query($sql) === TRUE) {
+													    printf("New record %s with tipe_form %s created successfully\n", $nama_tps,$tipe_form);
+													} else {
+													    printf("Error: " . $sql . "\n" . $dbconn->error);
+													}
+
 												}
 											}
-											$nama_tps = sprintf('TPS %0'.strval(floor(log10(sizeof($daftar_tps["data"]))+1)).'d',$no_tps);
-											$sql = sprintf("INSERT INTO suara_kawalpemilu_pilpres (id_provinsi,id_kotakab,id_kecamatan,id_kelurahan,nama_tps,tanggal_update_suara_kawalpemilu_pilpres, pas1, pas2, tSah, sah, photo) VALUES (%s,%s,%s,%s,'%s','%s', %s, %s, %s, %s,'%s') ON DUPLICATE KEY UPDATE tanggal_update_suara_kawalpemilu_pilpres='%s', pas1=%s, pas2=%s, tSah=%s, sah=%s, photo='%s'", $id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$nama_tps,$date, $pas1, $pas2, $tSah, $sah,$photo,$date, $pas1, $pas2, $tSah, $sah,$photo); //TODO ADD PHOTO
-											if ($dbconn->query($sql) === TRUE) {
-											    printf("New record %s created successfully\n", $nama_tps);
-											} else {
-											    printf("Error: " . $sql . "\n" . $dbconn->error);
+											if ($photo == NULL){
+												$sql = sprintf("INSERT INTO suara_kawalpemilu_pilpres (id_provinsi,id_kotakab,id_kecamatan,id_kelurahan,nama_tps,tanggal_update_suara_kawalpemilu_pilpres, pas1, pas2, tSah, sah, photo, tipe_form) VALUES (%s,%s,%s,%s,'%s','%s', %s, %s, %s, %s,'%s', 'unknown') ON DUPLICATE KEY UPDATE tanggal_update_suara_kawalpemilu_pilpres='%s', pas1=%s, pas2=%s, tSah=%s, sah=%s, photo='%s'", $id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan,$nama_tps,$date, $pas1, $pas2, $tSah, $sah,$photo,$date, $pas1, $pas2, $tSah, $sah,$photo); //TODO ADD PHOTO
+												if ($dbconn->query($sql) === TRUE) {
+												    printf("New record %s created successfully\n", $nama_tps);
+												} else {
+												    printf("Error: " . $sql . "\n" . $dbconn->error);
+												}
+											}else{
+												$sql = sprintf("DELETE FROM suara_kawalpemilu_pilpres WHERE id_provinsi=%s AND id_kotakab = %s AND id_kecamatan = %s AND id_kelurahan = %s AND nama_tps = '%s' AND tipe_form = 'unknown'", $id_provinsi, $id_kotakab, $id_kecamatan, $id_kelurahan, $nama_tps);
+												if ($dbconn->query($sql) === TRUE) {
+												    printf("Old record %s deleted successfully\n", $nama_tps);
+												} else {
+												    printf("Error: " . $sql . "\n" . $dbconn->error);
+												}
 											}
 											if ($callback){
 												$callback($id_provinsi, $id_kotakab, $id_kecamatan, $id_kelurahan, $nama_tps, $dbconn);

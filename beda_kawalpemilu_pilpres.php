@@ -296,13 +296,17 @@
 
 			<style>
 				@media screen and (min-width: 720px) {
-					.column {
+					.column-2 {
 					  float: left;
 					  width: 50%;
 					}
+					.column-3 {
+					  float: left;
+					  width: 25%;
+					}
 				}
 				@media screen and (max-width: 720px) {
-					.column:after {
+					.column-2 .column-3:after {
 					  content: "";
 					  display: table;
 					  clear: both;
@@ -317,20 +321,22 @@
 				}
 			</style>
 			<div class="row">
-			<div class="column"><input type="checkbox" name="pas1_kpu_gt_kawalpemilu" <?php if ($check_all or isset($_GET['pas1_kpu_gt_kawalpemilu'])){ echo 'checked';} ?>> Paslon 01 Situng KPU > Paslon 01 KawalPemilu</div>
-			<div class="column"><input type="checkbox" name="pas1_kpu_lt_kawalpemilu" <?php if ($check_all or isset($_GET['pas1_kpu_lt_kawalpemilu'])){ echo 'checked';} ?>> Paslon 01 Situng KPU < Paslon 01 KawalPemilu</div>
+			<div class="column-2"><input type="checkbox" name="pas1_kpu_gt_kawalpemilu" <?php if ($check_all or isset($_GET['pas1_kpu_gt_kawalpemilu'])){ echo 'checked';} ?>> Paslon 01 Situng KPU > Paslon 01 KawalPemilu</div>
+			<div class="column-2"><input type="checkbox" name="pas1_kpu_lt_kawalpemilu" <?php if ($check_all or isset($_GET['pas1_kpu_lt_kawalpemilu'])){ echo 'checked';} ?>> Paslon 01 Situng KPU < Paslon 01 KawalPemilu</div>
 			</div>
 			<div class="row">
-			<div class="column"><input type="checkbox" name="pas2_kpu_gt_kawalpemilu" <?php if ($check_all or isset($_GET['pas2_kpu_gt_kawalpemilu'])){ echo 'checked';} ?>> Paslon 02 Situng KPU > Paslon 02 KawalPemilu</div>
-			<div class="column"><input type="checkbox" name="pas2_kpu_lt_kawalpemilu" <?php if ($check_all or isset($_GET['pas2_kpu_lt_kawalpemilu'])){ echo 'checked';} ?>> Paslon 02 Situng KPU < Paslon 02 KawalPemilu</div>
+			<div class="column-2"><input type="checkbox" name="pas2_kpu_gt_kawalpemilu" <?php if ($check_all or isset($_GET['pas2_kpu_gt_kawalpemilu'])){ echo 'checked';} ?>> Paslon 02 Situng KPU > Paslon 02 KawalPemilu</div>
+			<div class="column-2"><input type="checkbox" name="pas2_kpu_lt_kawalpemilu" <?php if ($check_all or isset($_GET['pas2_kpu_lt_kawalpemilu'])){ echo 'checked';} ?>> Paslon 02 Situng KPU < Paslon 02 KawalPemilu</div>
 			</div>
 			<div class="row">
-			<div class="column"><input type="checkbox" name="tSah_kpu_gt_kawalpemilu" <?php if ($check_all or isset($_GET['tSah_kpu_gt_kawalpemilu'])){ echo 'checked';} ?>> Suara Tidak Sah Situng KPU > Suara Tidak Sah KawalPemilu</div>
-			<div class="column"><input type="checkbox" name="tSah_kpu_lt_kawalpemilu" <?php if ($check_all or isset($_GET['tSah_kpu_lt_kawalpemilu'])){ echo 'checked';} ?>> Suara Tidak Sah Situng KPU < Suara Tidak Sah KawalPemilu</div>
+			<div class="column-2"><input type="checkbox" name="tSah_kpu_gt_kawalpemilu" <?php if ($check_all or isset($_GET['tSah_kpu_gt_kawalpemilu'])){ echo 'checked';} ?>> Suara Tidak Sah Situng KPU > Suara Tidak Sah KawalPemilu</div>
+			<div class="column-2"><input type="checkbox" name="tSah_kpu_lt_kawalpemilu" <?php if ($check_all or isset($_GET['tSah_kpu_lt_kawalpemilu'])){ echo 'checked';} ?>> Suara Tidak Sah Situng KPU < Suara Tidak Sah KawalPemilu</div>
 			</div>
 			<div class="row">
-			<div class="column"><input type="checkbox" name="sah_kpu_gt_kawalpemilu" <?php if ($check_all or isset($_GET['sah_kpu_gt_kawalpemilu'])){ echo 'checked';} ?>> Suara Sah Situng KPU > Suara Sah KawalPemilu</div>
-			<div class="column"><input type="checkbox" name="sah_kpu_lt_kawalpemilu" <?php if ($check_all or isset($_GET['sah_kpu_lt_kawalpemilu'])){ echo 'checked';} ?>> Suara Sah Situng KPU < Suara Sah KawalPemilu</div>
+			<div class="column-2"><input type="checkbox" name="sah_kpu_gt_kawalpemilu" <?php if ($check_all or isset($_GET['sah_kpu_gt_kawalpemilu'])){ echo 'checked';} ?>> Suara Sah Situng KPU > Suara Sah KawalPemilu</div>
+			<div class="column-2"><input type="checkbox" name="sah_kpu_lt_kawalpemilu" <?php if ($check_all or isset($_GET['sah_kpu_lt_kawalpemilu'])){ echo 'checked';} ?>> Suara Sah Situng KPU < Suara Sah KawalPemilu</div>
+			<div class="row"> <div class="column-4">
+			Bandingkan dengan:</div> <div class="column-3"><input type="radio" name="tipe-form" value="C1">C1 KawalPemilu</div><div class="column-3"><input type="radio" name="tipe-form" value="C1-Plano">C1-Plano KawalPemilu</div><div class="column-3"><input type="radio" name="tipe-form" value="all" checked="checked">Semua</div>
 			</div>
 			<button type="submit" id="submitbutton">Lihat</button>
 		</form>

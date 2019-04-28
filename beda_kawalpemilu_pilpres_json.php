@@ -1,6 +1,6 @@
 <?php
 	// define the path and name of cached file
-	$cachefile = 'cached-files-beda_kawalpemilu_pilpres_json.php'.isset($_GET['pas1_kpu_gt_kawalpemilu']) . isset($_GET['pas1_kpu_lt_kawalpemilu']) . isset($_GET['pas2_kpu_gt_kawalpemilu']) . isset($_GET['pas2_kpu_lt_kawalpemilu']) . isset($_GET['tSah_kpu_gt_kawalpemilu']) . isset($_GET['tSah_kpu_lt_kawalpemilu']) . isset($_GET['sah_kpu_gt_kawalpemilu']) . isset($_GET['sah_kpu_lt_kawalpemilu']);
+	$cachefile = 'cached-files-beda_kawalpemilu_pilpres_json.php'.isset($_GET['pas1_kpu_gt_kawalpemilu']) . isset($_GET['pas1_kpu_lt_kawalpemilu']) . isset($_GET['pas2_kpu_gt_kawalpemilu']) . isset($_GET['pas2_kpu_lt_kawalpemilu']) . isset($_GET['tSah_kpu_gt_kawalpemilu']) . isset($_GET['tSah_kpu_lt_kawalpemilu']) . isset($_GET['sah_kpu_gt_kawalpemilu']) . isset($_GET['sah_kpu_lt_kawalpemilu']) . (isset($_GET['tipe-form'])?$_GET['tipe-form']:'0');
 	// define how long we want to keep the file in seconds. 
 	$cachetime = 20;
 	// Check if the cached file is still fresh. If it is, serve it up and exit.
@@ -88,7 +88,15 @@
 			array_push($conditions,'suara_situngkpu_pilpres.sah'.$operator.'suara_kawalpemilu_pilpres.sah');
 		}
 
-		$sql = "SELECT id_tps, tanggal_update_suara_situngkpu_pilpres, tanggal_update_suara_kawalpemilu_pilpres,  suara_situngkpu_pilpres.pas1 as situngkpupas1, suara_situngkpu_pilpres.pas2 as situngkpupas2, suara_situngkpu_pilpres.tSah as situngkputSah, suara_situngkpu_pilpres.sah as situngkpusah,  suara_kawalpemilu_pilpres.pas1 as kawalpemilupas1, suara_kawalpemilu_pilpres.pas2 as kawalpemilupas2, suara_kawalpemilu_pilpres.tSah as kawalpemilutSah, suara_kawalpemilu_pilpres.sah as kawalpemilusah, nama_provinsi, nama_kotakab, nama_kecamatan, nama_kelurahan, tps.nama_tps, suara_situngkpu_pilpres.photo as situngkpuphoto, suara_kawalpemilu_pilpres.photo as kawalpemiluphoto FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) NATURAL JOIN provinsi NATURAL JOIN kotakab NATURAL JOIN kecamatan NATURAL JOIN kelurahan WHERE ".implode(' OR ',$conditions);
+		$sql = "SELECT id_tps, tanggal_update_suara_situngkpu_pilpres, tanggal_update_suara_kawalpemilu_pilpres,  suara_situngkpu_pilpres.pas1 as situngkpupas1, suara_situngkpu_pilpres.pas2 as situngkpupas2, suara_situngkpu_pilpres.tSah as situngkputSah, suara_situngkpu_pilpres.sah as situngkpusah,  suara_kawalpemilu_pilpres.pas1 as kawalpemilupas1, suara_kawalpemilu_pilpres.pas2 as kawalpemilupas2, suara_kawalpemilu_pilpres.tSah as kawalpemilutSah, suara_kawalpemilu_pilpres.sah as kawalpemilusah, nama_provinsi, nama_kotakab, nama_kecamatan, nama_kelurahan, tps.nama_tps, suara_situngkpu_pilpres.photo as situngkpuphoto, suara_kawalpemilu_pilpres.photo as kawalpemiluphoto FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) NATURAL JOIN provinsi NATURAL JOIN kotakab NATURAL JOIN kecamatan NATURAL JOIN kelurahan WHERE (".implode(' OR ',$conditions).")";
+		if (isset($_GET['tipe-form'])){
+			if ($_GET['tipe-form']=='C1'){
+				$sql = $sql. " AND suara_kawalpemilu_pilpres.tipe_form='c1'";
+			}else if ($_get['tipe-form']=='C1-Plano'){
+				$sql = $sql. " AND suara_kawalpemilu_pilpres.tipe_form='c1-plano'";
+			}
+		}
+		error_log($sql);
 		$result = $dbconn->query($sql);
 
 		$entries=[];
