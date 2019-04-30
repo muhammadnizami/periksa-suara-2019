@@ -10,11 +10,13 @@ $server_kawalpemilu = "kawal-c1.appspot.com";
 
 $waktu_coba_lagi = 5;
 $max_waktu_coba_lagi = 300;
+$max_percobaan=10;
 
 function file_get_contents_no_verify_continue_try($url){
 	$waktu_coba_lagi = $GLOBALS['waktu_coba_lagi'];
 	$max_waktu_coba_lagi = $GLOBALS['max_waktu_coba_lagi'];
 	$percobaan=0;
+	$result = false;
 	do{
 
 		$arrContextOptions=array(
@@ -26,7 +28,7 @@ function file_get_contents_no_verify_continue_try($url){
 		$result= file_get_contents($url, false, stream_context_create($arrContextOptions));
 		sleep(min($max_waktu_coba_lagi,$waktu_coba_lagi*$percobaan));
 		$percobaan = $percobaan + 1;
-	}while ($result==NULL);
+	}while ($result==NULL and $percobaan < $max_percobaan);
 
 	return $result;
 }
@@ -157,25 +159,40 @@ function updateSuaraKawalPemilu($callback=0){
 	$url_nasional = sprintf(PROTOKOL_KAWALPEMILU."://%s/api/c/0",$server_kawalpemilu);
 	$json_nasional = file_get_contents_no_verify_continue_try($url_nasional);
 	$daftar_provinsi = json_decode($json_nasional,true);
+	if ($json_nasional==NULL){
+		return false;
+	}
 	foreach($daftar_provinsi["data"] as $id_provinsi => $detail_provinsi){
 		if (array_key_exists("cakupan",$detail_provinsi["sum"]) and $detail_provinsi["sum"]["cakupan"] > 0){
 			$url_provinsi = sprintf(PROTOKOL_KAWALPEMILU."://%s/api/c/%d",$server_kawalpemilu, $id_provinsi);
 			$json_provinsi = file_get_contents_no_verify_continue_try($url_provinsi);
+			if ($json_provinsi==NULL){
+				continue;
+			}
 			$daftar_kotakab = json_decode($json_provinsi,true);
 			foreach($daftar_kotakab["data"] as $id_kotakab => $detail_kotakab){
 				if (array_key_exists("cakupan",$detail_kotakab["sum"]) and $detail_kotakab["sum"]["cakupan"] > 0){
 					$url_kotakab = sprintf(PROTOKOL_KAWALPEMILU."://%s/api/c/%d",$server_kawalpemilu, $id_kotakab);
 					$json_kotakab = file_get_contents_no_verify_continue_try($url_kotakab);
+					if ($json_kotakab==NULL){
+						continue;
+					}
 					$daftar_kecamatan = json_decode($json_kotakab,true);
 					foreach($daftar_kecamatan["data"] as $id_kecamatan => $detail_kecamatan){
 						if (array_key_exists("cakupan",$detail_kecamatan["sum"]) and $detail_kecamatan["sum"]["cakupan"] > 0){
 							$url_kecamatan = sprintf(PROTOKOL_KAWALPEMILU."://%s/api/c/%d",$server_kawalpemilu, $id_kecamatan);
 							$json_kecamatan = file_get_contents_no_verify_continue_try($url_kecamatan);
+							if ($json_kecamatan==NULL){
+								continue;
+							}
 							$daftar_kelurahan = json_decode($json_kecamatan,true);
 							foreach($daftar_kelurahan["data"] as $id_kelurahan => $detail_kelurahan){
 								if (array_key_exists("cakupan",$detail_kelurahan["sum"]) and $detail_kelurahan["sum"]["cakupan"] > 0){
 									$url_kelurahan = sprintf(PROTOKOL_KAWALPEMILU."://%s/api/c/%d",$server_kawalpemilu, $id_kelurahan);
 									$json_kelurahan = file_get_contents_no_verify_continue_try($url_kelurahan);
+									if ($json_kelurahan==NULL){
+										continue;
+									}
 									$daftar_tps = json_decode($json_kelurahan,true);
 									foreach($daftar_tps["data"] as $no_tps => $detail_tps){
 										$sum = $detail_tps["sum"];
@@ -298,6 +315,9 @@ function update_tps($antrian_update_tps, $dbconn){
 	        	if ($provinsi->num_rows == 0){
 					$url_nasional= sprintf(PROTOKOL_KPU."://%s/static/json/wilayah/0.json", $server_kpu);
 					$json_nasional = file_get_contents_no_verify_continue_try($url_nasional);
+					if ($json_nasional==NULL){
+						continue;
+					}
 					$daftar_provinsi = json_decode($json_nasional,true);
 					$daftar_provinsi_baru_sql = array();
 					$daftar_id_provinsi_baru = array();
@@ -328,6 +348,9 @@ function update_tps($antrian_update_tps, $dbconn){
 	        	if ($kotakab->num_rows == 0){
 					$url_provinsi= sprintf(PROTOKOL_KPU."://%s/static/json/wilayah/%d.json", $server_kpu,$id_provinsi);
 					$json_provinsi = file_get_contents_no_verify_continue_try($url_provinsi);
+					if ($json_provinsi==NULL){
+						continue;
+					}
 					$daftar_kotakab = json_decode($json_provinsi,true);
 					$daftar_kotakab_baru_sql = array();
 					$daftar_id_kotakab_baru = array();
@@ -358,6 +381,9 @@ function update_tps($antrian_update_tps, $dbconn){
 	        	if ($kecamatan->num_rows == 0){
 					$url_kotakab= sprintf(PROTOKOL_KPU."://%s/static/json/wilayah/%d/%d.json", $server_kpu,$id_provinsi,$id_kotakab);
 					$json_kotakab = file_get_contents_no_verify_continue_try($url_kotakab);
+					if ($json_kotakab==NULL){
+						continue;
+					}
 					$daftar_kecamatan = json_decode($json_kotakab,true);
 					$daftar_kecamatan_baru_sql = array();
 					$daftar_id_kecamatan_baru = array();
@@ -388,6 +414,9 @@ function update_tps($antrian_update_tps, $dbconn){
 	        	if ($kelurahan->num_rows == 0){
 					$url_kecamatan= sprintf(PROTOKOL_KPU."://%s/static/json/wilayah/%d/%d/%d.json", $server_kpu,$id_provinsi,$id_kotakab,$id_kecamatan);
 					$json_kecamatan = file_get_contents_no_verify_continue_try($url_kecamatan);
+					if ($json_kecamatan==NULL){
+						continue;
+					}
 					$daftar_kelurahan = json_decode($json_kecamatan,true);
 					$daftar_kelurahan_baru_sql = array();
 					$daftar_id_kelurahan_baru = array();
@@ -418,6 +447,9 @@ function update_tps($antrian_update_tps, $dbconn){
 	        	if ($tps->num_rows == 0){
 					$url_kelurahan= sprintf(PROTOKOL_KPU."://%s/static/json/wilayah/%d/%d/%d/%d.json", $server_kpu,$id_provinsi,$id_kotakab,$id_kecamatan,$id_kelurahan);
 					$json_kelurahan = file_get_contents_no_verify_continue_try($url_kelurahan);
+					if ($json_kelurahan==NULL){
+						continue;
+					}
 					$daftar_tps = json_decode($json_kelurahan,true);
 					$daftar_tps_baru_sql = array();
 					$daftar_no_tps_baru = array();
@@ -454,6 +486,9 @@ function update_tps($antrian_update_tps, $dbconn){
 	    	$url_suara = sprintf(PROTOKOL_KPU."://".$server_kpu."/static/json/hhcw/ppwp/%d/%d/%d/%d/%d.json",
 	    		$id_provinsi, $id_kotakab, $id_kecamatan, $id_kelurahan, $id_tps);
 	    	$json_suara = file_get_contents_no_verify_continue_try($url_suara);
+			if ($json_suara==NULL){
+				continue;
+			}
 	    	$suara = json_decode($json_suara,true);
 	    	if (array_key_exists('chart',$suara)){
 	    		$pas1 = $suara['chart'][21];
