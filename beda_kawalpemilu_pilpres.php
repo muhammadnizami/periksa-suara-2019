@@ -188,13 +188,22 @@
 			         <table border=1>
 				        <tr>
 				        	<th>Perbedaan</th>
-				        	<th>Jumlah Suara</th>
-				        	<th>Jumlah Entri</th>
+				        	<th>(C1) Jumlah Suara</th>
+				        	<th>(C1) Jumlah Entri</th>
+
+				        	<th>(C1-Plano) Jumlah Suara</th>
+				        	<th>(C1-Plano) Jumlah Entri</th>
 				    	</tr>
 				    	<tr>
 				    		<td> Paslon 01 Situng KPU > Paslon 01 KawalPemilu </td>
 				    		<?php
-				    			$sql = "SELECT SUM(suara_situngkpu_pilpres.pas1 - suara_kawalpemilu_pilpres.pas1) as jumlah_suara ,COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.pas1 > suara_kawalpemilu_pilpres.pas1";
+				    			$sql = "SELECT SUM(suara_situngkpu_pilpres.pas1 - suara_kawalpemilu_pilpres.pas1) as jumlah_suara ,COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.pas1 > suara_kawalpemilu_pilpres.pas1 AND tipe_form='c1'";
+				    			$result = $dbconn->query($sql)->fetch_assoc();
+			    			?>
+				    		<th><?php echo $result['jumlah_suara'] ?></th>
+				    		<th><?php echo $result['jumlah_tps'] ?></th>
+				    		<?php
+				    			$sql = "SELECT SUM(suara_situngkpu_pilpres.pas1 - suara_kawalpemilu_pilpres.pas1) as jumlah_suara ,COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.pas1 > suara_kawalpemilu_pilpres.pas1 AND tipe_form='c1-plano'";
 				    			$result = $dbconn->query($sql)->fetch_assoc();
 			    			?>
 				    		<th><?php echo $result['jumlah_suara'] ?></th>
@@ -203,7 +212,13 @@
 				    	<tr>
 				    		<td> Paslon 01 Situng KPU < Paslon 01 KawalPemilu </td>
 				    		<?php
-				    			$sql = "SELECT SUM(0 - suara_situngkpu_pilpres.pas1 + suara_kawalpemilu_pilpres.pas1) as jumlah_suara ,COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.pas1 < suara_kawalpemilu_pilpres.pas1";
+				    			$sql = "SELECT SUM(0 - suara_situngkpu_pilpres.pas1 + suara_kawalpemilu_pilpres.pas1) as jumlah_suara ,COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.pas1 < suara_kawalpemilu_pilpres.pas1 AND tipe_form='c1'";
+				    			$result = $dbconn->query($sql)->fetch_assoc();
+			    			?>
+				    		<th><?php echo $result['jumlah_suara'] ?></th>
+				    		<th><?php echo $result['jumlah_tps'] ?></th>
+				    		<?php
+				    			$sql = "SELECT SUM(0 - suara_situngkpu_pilpres.pas1 + suara_kawalpemilu_pilpres.pas1) as jumlah_suara ,COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.pas1 < suara_kawalpemilu_pilpres.pas1 AND tipe_form='c1-plano'";
 				    			$result = $dbconn->query($sql)->fetch_assoc();
 			    			?>
 				    		<th><?php echo $result['jumlah_suara'] ?></th>
@@ -212,7 +227,13 @@
 				    	<tr>
 				    		<td> Paslon 02 Situng KPU > Paslon 02 KawalPemilu </td>
 				    		<?php
-				    			$sql = "SELECT SUM(suara_situngkpu_pilpres.pas2 - suara_kawalpemilu_pilpres.pas2) as jumlah_suara ,COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.pas2 > suara_kawalpemilu_pilpres.pas2";
+				    			$sql = "SELECT SUM(suara_situngkpu_pilpres.pas2 - suara_kawalpemilu_pilpres.pas2) as jumlah_suara ,COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.pas2 > suara_kawalpemilu_pilpres.pas2 AND tipe_form='c1'";
+				    			$result = $dbconn->query($sql)->fetch_assoc();
+			    			?>
+				    		<th><?php echo $result['jumlah_suara'] ?></th>
+				    		<th><?php echo $result['jumlah_tps'] ?></th>
+				    		<?php
+				    			$sql = "SELECT SUM(suara_situngkpu_pilpres.pas2 - suara_kawalpemilu_pilpres.pas2) as jumlah_suara ,COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.pas2 > suara_kawalpemilu_pilpres.pas2 AND tipe_form='c1-plano'";
 				    			$result = $dbconn->query($sql)->fetch_assoc();
 			    			?>
 				    		<th><?php echo $result['jumlah_suara'] ?></th>
@@ -221,7 +242,13 @@
 				    	<tr>
 				    		<td> Paslon 02 Situng KPU < Paslon 02 KawalPemilu </td>
 				    		<?php
-				    			$sql = "SELECT SUM(0 - suara_situngkpu_pilpres.pas2 + suara_kawalpemilu_pilpres.pas2) as jumlah_suara ,COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.pas2 < suara_kawalpemilu_pilpres.pas2";
+				    			$sql = "SELECT SUM(0 - suara_situngkpu_pilpres.pas2 + suara_kawalpemilu_pilpres.pas2) as jumlah_suara ,COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.pas2 < suara_kawalpemilu_pilpres.pas2 AND tipe_form='c1'";
+				    			$result = $dbconn->query($sql)->fetch_assoc();
+			    			?>
+				    		<th><?php echo $result['jumlah_suara'] ?></th>
+				    		<th><?php echo $result['jumlah_tps'] ?></th>
+				    		<?php
+				    			$sql = "SELECT SUM(0 - suara_situngkpu_pilpres.pas2 + suara_kawalpemilu_pilpres.pas2) as jumlah_suara ,COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.pas2 < suara_kawalpemilu_pilpres.pas2 AND tipe_form='c1-plano'";
 				    			$result = $dbconn->query($sql)->fetch_assoc();
 			    			?>
 				    		<th><?php echo $result['jumlah_suara'] ?></th>
@@ -230,7 +257,13 @@
 				    	<tr>
 				    		<td> Suara Tidak Sah Situng KPU > Suara Tidak Sah KawalPemilu </td>
 				    		<?php
-				    			$sql = "SELECT SUM(suara_situngkpu_pilpres.tSah - suara_kawalpemilu_pilpres.tSah) as jumlah_suara ,COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.tSah > suara_kawalpemilu_pilpres.tSah";
+				    			$sql = "SELECT SUM(suara_situngkpu_pilpres.tSah - suara_kawalpemilu_pilpres.tSah) as jumlah_suara ,COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.tSah > suara_kawalpemilu_pilpres.tSah AND tipe_form='c1'";
+				    			$result = $dbconn->query($sql)->fetch_assoc();
+			    			?>
+				    		<th><?php echo $result['jumlah_suara'] ?></th>
+				    		<th><?php echo $result['jumlah_tps'] ?></th>
+				    		<?php
+				    			$sql = "SELECT SUM(suara_situngkpu_pilpres.tSah - suara_kawalpemilu_pilpres.tSah) as jumlah_suara ,COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.tSah > suara_kawalpemilu_pilpres.tSah AND tipe_form='c1-plano'";
 				    			$result = $dbconn->query($sql)->fetch_assoc();
 			    			?>
 				    		<th><?php echo $result['jumlah_suara'] ?></th>
@@ -239,7 +272,13 @@
 				    	<tr>
 				    		<td> Suara Tidak Sah Situng KPU < Suara Tidak Sah KawalPemilu </td>
 				    		<?php
-				    			$sql = "SELECT SUM(0 - suara_situngkpu_pilpres.tSah + suara_kawalpemilu_pilpres.tSah) as jumlah_suara ,COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.tSah < suara_kawalpemilu_pilpres.tSah";
+				    			$sql = "SELECT SUM(0 - suara_situngkpu_pilpres.tSah + suara_kawalpemilu_pilpres.tSah) as jumlah_suara ,COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.tSah < suara_kawalpemilu_pilpres.tSah AND tipe_form='c1'";
+				    			$result = $dbconn->query($sql)->fetch_assoc();
+			    			?>
+				    		<th><?php echo $result['jumlah_suara'] ?></th>
+				    		<th><?php echo $result['jumlah_tps'] ?></th>
+				    		<?php
+				    			$sql = "SELECT SUM(0 - suara_situngkpu_pilpres.tSah + suara_kawalpemilu_pilpres.tSah) as jumlah_suara ,COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.tSah < suara_kawalpemilu_pilpres.tSah AND tipe_form='c1-plano'";
 				    			$result = $dbconn->query($sql)->fetch_assoc();
 			    			?>
 				    		<th><?php echo $result['jumlah_suara'] ?></th>
@@ -248,7 +287,13 @@
 				    	<tr>
 				    		<td> Suara Sah Situng KPU > Suara Sah KawalPemilu </td>
 				    		<?php
-				    			$sql = "SELECT SUM(suara_situngkpu_pilpres.sah - suara_kawalpemilu_pilpres.sah) as jumlah_suara ,COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.sah > suara_kawalpemilu_pilpres.sah";
+				    			$sql = "SELECT SUM(suara_situngkpu_pilpres.sah - suara_kawalpemilu_pilpres.sah) as jumlah_suara ,COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.sah > suara_kawalpemilu_pilpres.sah AND tipe_form='c1'";
+				    			$result = $dbconn->query($sql)->fetch_assoc();
+			    			?>
+				    		<th><?php echo $result['jumlah_suara'] ?></th>
+				    		<th><?php echo $result['jumlah_tps'] ?></th>
+				    		<?php
+				    			$sql = "SELECT SUM(suara_situngkpu_pilpres.sah - suara_kawalpemilu_pilpres.sah) as jumlah_suara ,COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.sah > suara_kawalpemilu_pilpres.sah AND tipe_form='c1-plano'";
 				    			$result = $dbconn->query($sql)->fetch_assoc();
 			    			?>
 				    		<th><?php echo $result['jumlah_suara'] ?></th>
@@ -257,7 +302,13 @@
 				    	<tr>
 				    		<td> Suara Sah Situng KPU < Suara Sah KawalPemilu </td>
 				    		<?php
-				    			$sql = "SELECT SUM(0 - suara_situngkpu_pilpres.sah + suara_kawalpemilu_pilpres.sah) as jumlah_suara ,COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.sah < suara_kawalpemilu_pilpres.sah";
+				    			$sql = "SELECT SUM(0 - suara_situngkpu_pilpres.sah + suara_kawalpemilu_pilpres.sah) as jumlah_suara ,COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.sah < suara_kawalpemilu_pilpres.sah AND tipe_form='c1'";
+				    			$result = $dbconn->query($sql)->fetch_assoc();
+			    			?>
+				    		<th><?php echo $result['jumlah_suara'] ?></th>
+				    		<th><?php echo $result['jumlah_tps'] ?></th>
+				    		<?php
+				    			$sql = "SELECT SUM(0 - suara_situngkpu_pilpres.sah + suara_kawalpemilu_pilpres.sah) as jumlah_suara ,COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps) WHERE suara_situngkpu_pilpres.sah < suara_kawalpemilu_pilpres.sah AND tipe_form='c1-plano'";
 				    			$result = $dbconn->query($sql)->fetch_assoc();
 			    			?>
 				    		<th><?php echo $result['jumlah_suara'] ?></th>
