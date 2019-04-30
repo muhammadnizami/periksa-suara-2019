@@ -92,11 +92,10 @@
 		if (isset($_GET['tipe-form'])){
 			if ($_GET['tipe-form']=='C1'){
 				$sql = $sql. " AND suara_kawalpemilu_pilpres.tipe_form='c1'";
-			}else if ($_get['tipe-form']=='C1-Plano'){
+			}else if ($_GET['tipe-form']=='C1-Plano'){
 				$sql = $sql. " AND suara_kawalpemilu_pilpres.tipe_form='c1-plano'";
 			}
 		}
-		error_log($sql);
 		$result = $dbconn->query($sql);
 
 		$entries=[];
