@@ -132,7 +132,6 @@
 			$(window).on('load', function () {
 			    $(".trigger_popup_fricc").click(function(){
 			    	hover_id = $(this).attr('id').replace('trigger','hover');
-			    	console.log(hover_id);
 			       $('.hover_bkgr_fricc#'+hover_id).show();
 			    });
 			    $('.hover_bkgr_fricc').click(function(){
