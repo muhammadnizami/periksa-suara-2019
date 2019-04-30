@@ -159,11 +159,17 @@
 			        <p> Data tidak selalu data terbaru dan tidak lengkap. Data hanya diupdate kadang-kadang dan hanya sebagian saja. </p>
 			        <p> Data yang muncul di bawah ini bisa saja salah. Harap crosscheck dengan sumber aslinya. Data di situs ini hanya untuk membantu mendeteksi dan tidak dapat dijadikan bukti apapun. </p>
 			        <p> ***Untuk memahami rangkuman, harap perhatikan macam-macam penyebab kenapa data berbeda. Arti dari rangkuman ini harus dilihat dari sumber kesalahannya. Sumber kesalahan bisa dari mana saja, termasuk dari pengumpulan data di situs ini. Silakan lihat data yang lebih detil di bagian bawah </p>
+			        <p> tiap TPS bisa punya dua entri data di kawalpemilu: data C1 dan data C1-Plano. </p>
 		    </div>
 		</div>
         <h2> Rangkuman***</h2>
 		<p> Jumlah Entri yang telah dicocokkan: <?php
 			$sql = "SELECT COUNT(*) as jumlah_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps);";
+			$result = $dbconn->query($sql)->fetch_assoc();
+			echo $result['jumlah_tps'];
+		?></p>
+		<p> Jumlah TPS yang telah dicocokkan: <?php
+			$sql = "SELECT COUNT(*) as jumlah_tps FROM (SELECT DISTINCT id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps FROM (suara_situngkpu_pilpres NATURAL JOIN tps) JOIN suara_kawalpemilu_pilpres USING (id_provinsi, id_kotakab, id_kecamatan, id_kelurahan, no_tps)) as tmp;";
 			$result = $dbconn->query($sql)->fetch_assoc();
 			echo $result['jumlah_tps'];
 		?></p>
